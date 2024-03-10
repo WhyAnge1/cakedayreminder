@@ -2,6 +2,7 @@ import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_service.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class EditBirthdayPage extends StatefulWidget {
@@ -59,9 +60,9 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
       appBar: AppBar(
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
-        title: const Text(
-          'Edit cakeday',
-          style: TextStyle(
+        title: Text(
+          'edit_cakeday'.tr,
+          style: const TextStyle(
             color: AppColors.cornsilk,
           ),
         ),
@@ -83,21 +84,21 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
                 color: AppColors.cornsilk,
               ),
               controller: _nameController,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
+              decoration: InputDecoration(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
-                labelText: 'Person name',
+                labelText: 'person_name'.tr,
               ),
             ),
             const SizedBox(height: 20.0),
@@ -133,9 +134,9 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
                     setState(() {});
                   },
                 ),
-                const Text(
-                  "I don't know year",
-                  style: TextStyle(
+                Text(
+                  "i_don_t_know_year".tr,
+                  style: const TextStyle(
                     color: AppColors.cornsilk,
                   ),
                 ),
@@ -147,34 +148,34 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
                 color: AppColors.cornsilk,
               ),
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
+              decoration: InputDecoration(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
-                labelText: 'Some notes to not forget who it is :D',
+                labelText: 'some_notes_to_not_forget'.tr,
               ),
             ),
             const SizedBox(height: 15.0),
             FloatingActionButton.extended(
               backgroundColor: AppColors.lion,
-              label: const Padding(
-                padding: EdgeInsets.symmetric(
+              label: Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 5,
                   horizontal: 15,
                 ),
                 child: Text(
-                  'Save',
-                  style: TextStyle(
+                  'save'.tr,
+                  style: const TextStyle(
                     color: AppColors.cornsilk,
                   ),
                 ),
@@ -185,8 +186,8 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Changes are saved successfully'),
+                      SnackBar(
+                        content: Text('changes_are_saved_successfully'.tr),
                       ),
                     );
 
@@ -207,15 +208,15 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.lion,
-          title: const Text(
-            'Are you sure?',
-            style: TextStyle(
+          title: Text(
+            'are_you_sure'.tr,
+            style: const TextStyle(
               color: AppColors.cornsilk,
             ),
           ),
-          content: const Text(
-            'You are going to delete this birthday. You can\'t undo this action.',
-            style: TextStyle(
+          content: Text(
+            'you_are_going_to_delete'.tr,
+            style: const TextStyle(
               color: AppColors.cornsilk,
             ),
           ),
@@ -225,9 +226,9 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
                 Navigator.of(context).pop();
                 _deleteBirthday();
               },
-              child: const Text(
-                'Delete',
-                style: TextStyle(
+              child: Text(
+                'delete'.tr,
+                style: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
               ),
@@ -236,9 +237,9 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
+              child: Text(
+                'cancel'.tr,
+                style: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_list.dart';
 import 'package:cakeday_reminder/ui/create_birthday/create_birthday.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,13 +37,13 @@ class _HomePageState extends State<HomePage>
           children: [
             const BirthdayListPage(),
             Container(
-              child: const Center(child: Text("Calendar")),
+              child: Center(child: Text("calendar".tr)),
             ),
             Container(
-              child: const Center(child: Text("Group")),
+              child: Center(child: Text("group".tr)),
             ),
             Container(
-              child: const Center(child: Text("Profile")),
+              child: Center(child: Text("profile".tr)),
             ),
           ],
         ),
