@@ -6,6 +6,7 @@ import 'package:cakeday_reminder/ui/edit_birthday/edit_birthday.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class BirthdayListPage extends StatefulWidget {
@@ -40,9 +41,9 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
         centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
-        title: const Text(
-          'All cakedays',
-          style: TextStyle(
+        title: Text(
+          'all_cakedays'.tr,
+          style: const TextStyle(
             color: AppColors.cornsilk,
           ),
         ),
@@ -55,11 +56,11 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
             children: [
               const SizedBox(height: 15),
               _birthdays.isEmpty
-                  ? const Expanded(
+                  ? Expanded(
                       child: Center(
                         child: Text(
-                          'No birthdays yet',
-                          style: TextStyle(
+                          'no_birthdays_yet'.tr,
+                          style: const TextStyle(
                             fontSize: 20,
                             color: AppColors.cornsilk,
                           ),

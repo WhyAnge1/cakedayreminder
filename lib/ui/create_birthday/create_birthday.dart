@@ -5,6 +5,7 @@ import 'package:cakeday_reminder/business_logic/birthday/birthday_service.dart';
 import 'package:cakeday_reminder/business_logic/import/import_service.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -48,9 +49,9 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
         centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
-        title: const Text(
-          'Add missed cakeday',
-          style: TextStyle(
+        title: Text(
+          'add_missed_cakeday'.tr,
+          style: const TextStyle(
             color: AppColors.cornsilk,
           ),
         ),
@@ -74,21 +75,21 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
               ),
               controller: _nameController,
               cursorColor: AppColors.cornsilk,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
+              decoration: InputDecoration(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
-                labelText: 'Person name',
+                labelText: 'person_name'.tr,
               ),
             ),
             const SizedBox(height: 20.0),
@@ -124,9 +125,9 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
                     setState(() {});
                   },
                 ),
-                const Text(
-                  "I don't know year",
-                  style: TextStyle(
+                Text(
+                  "i_don_t_know_year".tr,
+                  style: const TextStyle(
                     color: AppColors.cornsilk,
                   ),
                 ),
@@ -139,34 +140,34 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
               ),
               controller: _descriptionController,
               cursorColor: AppColors.cornsilk,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
+              decoration: InputDecoration(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.cornsilk,
                   ),
                 ),
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   color: AppColors.cornsilk,
                 ),
-                labelText: 'Some notes to not forget who it is :D',
+                labelText: 'some_notes_to_not_forget'.tr,
               ),
             ),
             const SizedBox(height: 15.0),
             FloatingActionButton.extended(
               backgroundColor: AppColors.lion,
-              label: const Padding(
-                padding: EdgeInsets.symmetric(
+              label: Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 5,
                   horizontal: 15,
                 ),
                 child: Text(
-                  'Save',
-                  style: TextStyle(
+                  'save'.tr,
+                  style: const TextStyle(
                     color: AppColors.cornsilk,
                   ),
                 ),
@@ -182,8 +183,8 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('New cakeday saved successfully'),
+                      SnackBar(
+                        content: Text('new_cakeday_saved_successfully'.tr),
                       ),
                     );
 
@@ -214,8 +215,8 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result
-                ? 'Cakedays imported successfully'
-                : 'Failed to import cakedays'),
+                ? 'cakedays_imported_successfully'.tr
+                : 'failed_to_import_cakedays'.tr),
           ),
         );
       }

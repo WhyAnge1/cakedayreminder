@@ -25,6 +25,8 @@ dependencies:
   animate_gradient: ^0.0.2+1
   flutter_gradient_animation_text: ^1.0.2
   glowy_borders: ^1.0.2
+  flutter_native_splash: ^2.3.13
+  get: ^4.6.6
   permission_handler: ^11.3.0
 
 dev_dependencies:
