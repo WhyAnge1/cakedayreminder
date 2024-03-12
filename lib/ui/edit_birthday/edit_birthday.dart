@@ -57,6 +57,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
     return Scaffold(
       backgroundColor: AppColors.resedaGreen,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
         title: const Text(

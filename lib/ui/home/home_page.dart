@@ -48,56 +48,68 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.lion,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(50),
+      floatingActionButton: SizedBox(
+        width: 70,
+        height: 70,
+        child: RawMaterialButton(
+          fillColor: AppColors.lion,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(50),
+            ),
           ),
-        ),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CreateBirthdayPage(),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateBirthdayPage(),
+            ),
           ),
-        ),
-        child: const Icon(
-          Icons.cake,
-          color: AppColors.cornsilk,
+          child: const Icon(
+            Icons.cake,
+            color: AppColors.cornsilk,
+            size: 30,
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Material(
-          color: AppColors.lion,
-          child: TabBar(
-            indicatorColor: Colors.transparent,
-            controller: _tabController,
-            tabs: const [
-              Tab(
-                icon: Icon(
-                  Icons.list,
-                  color: AppColors.cornsilk,
+        child: SizedBox(
+          height: 70,
+          child: Material(
+            color: AppColors.lion,
+            child: TabBar(
+              indicatorColor: Colors.transparent,
+              controller: _tabController,
+              tabs: const [
+                Tab(
+                  icon: Icon(
+                    Icons.list,
+                    color: AppColors.cornsilk,
+                    size: 30,
+                  ),
                 ),
-              ),
-              Tab(
-                icon: Icon(
-                  Icons.calendar_month,
-                  color: AppColors.cornsilk,
+                Tab(
+                  icon: Icon(
+                    Icons.calendar_month,
+                    color: AppColors.cornsilk,
+                    size: 30,
+                  ),
                 ),
-              ),
-              Tab(
-                icon: Icon(
-                  Icons.group,
-                  color: AppColors.cornsilk,
+                Tab(
+                  icon: Icon(
+                    Icons.group,
+                    color: AppColors.cornsilk,
+                    size: 30,
+                  ),
                 ),
-              ),
-              Tab(
-                icon: Icon(
-                  Icons.person,
-                  color: AppColors.cornsilk,
+                Tab(
+                  icon: Icon(
+                    Icons.person,
+                    color: AppColors.cornsilk,
+                    size: 30,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
