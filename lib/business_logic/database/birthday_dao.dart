@@ -10,13 +10,13 @@ abstract class BirthdayDao {
   Future<List<BirthdayModel>> getById(int id);
 
   @insert
-  Future<void> insertModel(BirthdayModel model);
+  Future<int> insertModel(BirthdayModel model);
 
   @insert
-  Future<void> insertItems(List<BirthdayModel> items);
+  Future<List<int>> insertItems(List<BirthdayModel> items);
 
   @update
-  Future<void> updateModel(BirthdayModel model);
+  Future<int> updateModel(BirthdayModel model);
 
   @delete
   Future<void> deleteModel(BirthdayModel model);

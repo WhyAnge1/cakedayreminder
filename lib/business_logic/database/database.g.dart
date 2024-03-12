@@ -168,20 +168,21 @@ class _$BirthdayDao extends BirthdayDao {
   }
 
   @override
-  Future<void> insertModel(BirthdayModel model) async {
-    await _birthdayModelInsertionAdapter.insert(
+  Future<int> insertModel(BirthdayModel model) {
+    return _birthdayModelInsertionAdapter.insertAndReturnId(
         model, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> insertItems(List<BirthdayModel> items) async {
-    await _birthdayModelInsertionAdapter.insertList(
+  Future<List<int>> insertItems(List<BirthdayModel> items) {
+    return _birthdayModelInsertionAdapter.insertListAndReturnIds(
         items, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> updateModel(BirthdayModel model) async {
-    await _birthdayModelUpdateAdapter.update(model, OnConflictStrategy.abort);
+  Future<int> updateModel(BirthdayModel model) {
+    return _birthdayModelUpdateAdapter.updateAndReturnChangedRows(
+        model, OnConflictStrategy.abort);
   }
 
   @override

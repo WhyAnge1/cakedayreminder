@@ -1,6 +1,5 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
-import 'package:cakeday_reminder/business_logic/import/import_service.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +15,6 @@ class CreateBirthdayPage extends StatefulWidget {
 }
 
 class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
-  final _importService = ImportService();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
