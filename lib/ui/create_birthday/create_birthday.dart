@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
-import 'package:cakeday_reminder/business_logic/birthday/birthday_service.dart';
+import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
 import 'package:cakeday_reminder/business_logic/import/import_service.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 
 class CreateBirthdayPage extends StatefulWidget {
   const CreateBirthdayPage({super.key});
@@ -18,7 +17,6 @@ class CreateBirthdayPage extends StatefulWidget {
 
 class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
   final _importService = ImportService();
-  final _birthdayService = BirthdayService();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -34,6 +32,7 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
       firstDate: DateTime(0),
       lastDate: DateTime(DateTime.now().year + 1),
     );
+
     if (picked != null && picked != _selectedDate) {
       _selectedDate =
           DateTime(_idkYear! ? 0 : picked.year, picked.month, picked.day);
@@ -172,26 +171,7 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
                   ),
                 ),
               ),
-              onPressed: () async {
-                if (_nameController.text.isNotEmpty) {
-                  await _birthdayService.saveBirthday(BirthdayModel(
-                    personName: _nameController.text,
-                    birthdayDate: DateTime(_selectedDate.year,
-                        _selectedDate.month, _selectedDate.day),
-                    note: _descriptionController.text,
-                  ));
-
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('new_cakeday_saved_successfully'.tr),
-                      ),
-                    );
-
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
+              onPressed: () async => await _saveBirthday(),
             ),
           ],
         ),
@@ -208,8 +188,9 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
     final filePath = result?.files.single.path;
 
     if (filePath != null) {
-      final result =
-          await _importService.importBirthdaysFromExel(File(filePath));
+      final result = await context
+          .read<BirthdayProvider>()
+          .importBirthdaysFromFile(filePath);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -219,6 +200,27 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
                 : 'failed_to_import_cakedays'.tr),
           ),
         );
+      }
+    }
+  }
+
+  Future _saveBirthday() async {
+    if (_nameController.text.isNotEmpty) {
+      await context.read<BirthdayProvider>().addBirthday(BirthdayModel(
+            personName: _nameController.text,
+            birthdayDate: DateTime(
+                _selectedDate.year, _selectedDate.month, _selectedDate.day),
+            note: _descriptionController.text,
+          ));
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('new_cakeday_saved_successfully'.tr),
+          ),
+        );
+
+        Navigator.of(context).pop();
       }
     }
   }

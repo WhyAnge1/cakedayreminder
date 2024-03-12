@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage>
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateBirthdayPage(),
+              builder: (context) => const CreateBirthdayPage(),
             ),
           ),
           child: const Icon(

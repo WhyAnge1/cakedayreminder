@@ -24,6 +24,8 @@ class Messages extends Translations {
           'cancel': 'Cancel',
           'person_name': 'Person name',
           'some_notes_to_not_forget': 'Some notes to not forget who it is :D',
+          'today': 'Today',
+          'tomorrow': 'Tomorrow',
         },
         'uk_UA': {
           'calendar': 'Календар',
@@ -48,6 +50,8 @@ class Messages extends Translations {
           'cancel': 'Скасувати',
           'person_name': 'Ім\'я людини',
           'some_notes_to_not_forget': 'Деякі нотатки, аби не забути хто це :D',
+          'today': 'Cьогодні',
+          'tomorrow': 'Завтра',
         }
       };
 }

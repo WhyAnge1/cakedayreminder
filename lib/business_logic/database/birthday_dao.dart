@@ -12,6 +12,9 @@ abstract class BirthdayDao {
   @insert
   Future<void> insertModel(BirthdayModel model);
 
+  @insert
+  Future<void> insertItems(List<BirthdayModel> items);
+
   @update
   Future<void> updateModel(BirthdayModel model);
 

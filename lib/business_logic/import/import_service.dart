@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
-import 'package:cakeday_reminder/business_logic/birthday/birthday_service.dart';
 import 'package:excel/excel.dart';
 
 class ImportService {
-  final _birthdayService = BirthdayService();
-
-  Future<bool> importBirthdaysFromExel(File exelFile) async {
-    var result = false;
+  Future<List<BirthdayModel>> importBirthdaysFromExel(File exelFile) async {
+    List<BirthdayModel> importedBirthdays = [];
 
     try {
       var bytes = exelFile.readAsBytesSync();
@@ -44,14 +41,12 @@ class ImportService {
               note: note ?? '',
             );
 
-            await _birthdayService.saveBirthday(model);
+            importedBirthdays.add(model);
           }
         }
-
-        result = true;
       }
     } catch (e) {}
 
-    return result;
+    return importedBirthdays;
   }
 }

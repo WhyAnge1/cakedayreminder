@@ -25,9 +25,9 @@ dependencies:
   animate_gradient: ^0.0.2+1
   flutter_gradient_animation_text: ^1.0.2
   glowy_borders: ^1.0.2
-  flutter_native_splash: ^2.3.13
   get: ^4.6.6
   permission_handler: ^11.3.0
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -44,11 +44,3 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-
-flutter_native_splash:
-  color: "#718974"
-  image: assets/images/splash_screen_image.png
-  android_12:
-    color: "#718974"
-    image: assets/images/app_icon.png
-
