@@ -1,4 +1,3 @@
-import 'package:animate_gradient/animate_gradient.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';

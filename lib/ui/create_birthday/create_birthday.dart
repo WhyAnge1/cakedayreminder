@@ -46,6 +46,7 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
     return Scaffold(
       backgroundColor: AppColors.resedaGreen,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
         title: Text(
@@ -56,29 +57,7 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () async {
-              final result = await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                allowedExtensions: ['xlsx', 'xls'],
-              );
-
-              final filePath = result?.files.single.path;
-
-              if (filePath != null) {
-                final result = await _importService
-                    .importBirthdaysFromExel(File(filePath));
-
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result
-                          ? 'cakedays_imported_successfully'.tr
-                          : 'failed_to_import_cakedays'.tr),
-                    ),
-                  );
-                }
-              }
-            },
+            onPressed: _uploadFile,
             icon: const Icon(
               Icons.upload_file,
               color: AppColors.cornsilk,
@@ -218,5 +197,29 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _uploadFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx', 'xls'],
+    );
+
+    final filePath = result?.files.single.path;
+
+    if (filePath != null) {
+      final result =
+          await _importService.importBirthdaysFromExel(File(filePath));
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result
+                ? 'cakedays_imported_successfully'.tr
+                : 'failed_to_import_cakedays'.tr),
+          ),
+        );
+      }
+    }
   }
 }

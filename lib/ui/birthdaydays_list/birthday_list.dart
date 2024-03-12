@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class BirthdayListPage extends StatefulWidget {
   const BirthdayListPage({super.key});
@@ -39,6 +38,7 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
     return Scaffold(
       backgroundColor: AppColors.resedaGreen,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
         title: Text(
