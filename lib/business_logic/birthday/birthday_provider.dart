@@ -16,38 +16,43 @@ class BirthdayProvider extends ChangeNotifier {
 
   Map<DateTime, List<BirthdayModel>> birthdayList = {};
 
-  Future addBirthday(BirthdayModel newBirthday) async {
+  Future addBirthday(BirthdayModel birthday) async {
     final database =
         await $FloorAppDatabase.databaseBuilder(DataBaseConstants.name).build();
-    var newModelId = await database.birthdayDao.insertModel(newBirthday);
+    await database.birthdayDao.insertModel(birthday);
     await database.close();
 
-    await _setupNotification(newBirthday, newModelId);
+    await _removeOldNotification(birthday.currentYearBirthdayDate);
 
-    refreshBirthdays();
+    await refreshBirthdays();
+
+    await _setupNewNotification(birthday.currentYearBirthdayDate);
   }
 
-  Future removeBirthday(BirthdayModel existBirthday) async {
+  Future removeBirthday(BirthdayModel birthday) async {
     final database =
         await $FloorAppDatabase.databaseBuilder(DataBaseConstants.name).build();
-    await database.birthdayDao.deleteModel(existBirthday);
+    await database.birthdayDao.deleteModel(birthday);
     await database.close();
 
-    _notificationService.cancelNotification(existBirthday.id!);
+    await _removeOldNotification(birthday.currentYearBirthdayDate);
 
-    refreshBirthdays();
+    await refreshBirthdays();
+
+    await _setupNewNotification(birthday.currentYearBirthdayDate);
   }
 
-  Future updateBirthday(BirthdayModel existBirthday) async {
+  Future updateBirthday(BirthdayModel birthday) async {
     final database =
         await $FloorAppDatabase.databaseBuilder(DataBaseConstants.name).build();
-    var existModelId = await database.birthdayDao.updateModel(existBirthday);
+    await database.birthdayDao.updateModel(birthday);
     await database.close();
 
-    _notificationService.cancelNotification(existBirthday.id!);
-    await _setupNotification(existBirthday, existModelId);
+    await _removeOldNotification(birthday.currentYearBirthdayDate);
 
-    refreshBirthdays();
+    await refreshBirthdays();
+
+    await _setupNewNotification(birthday.currentYearBirthdayDate);
   }
 
   Future refreshBirthdays() async {
@@ -92,15 +97,18 @@ class BirthdayProvider extends ChangeNotifier {
       final database = await $FloorAppDatabase
           .databaseBuilder(DataBaseConstants.name)
           .build();
-      var insertedBirthdaysId =
-          await database.birthdayDao.insertItems(importedBirthdays);
+      await database.birthdayDao.insertItems(importedBirthdays);
       await database.close();
 
-      for (int i = 0; i < importedBirthdays.length; i++) {
-        await _setupNotification(importedBirthdays[i], insertedBirthdaysId[i]);
+      for (final birthday in importedBirthdays) {
+        await _removeOldNotification(birthday.currentYearBirthdayDate);
       }
 
       refreshBirthdays();
+
+      for (final birthday in importedBirthdays) {
+        await _setupNewNotification(birthday.currentYearBirthdayDate);
+      }
 
       return true;
     } else {
@@ -108,18 +116,48 @@ class BirthdayProvider extends ChangeNotifier {
     }
   }
 
-  Future _setupNotification(BirthdayModel birthday, int id) async {
-    final year = birthday.currentYearBirthdayDate.isAfter(DateTime.now())
-        ? DateTime.now().year
-        : DateTime.now().year + 1;
-    final notificationDate = DateTime(
-        year, birthday.birthdayDate.month, birthday.birthdayDate.day, 9, 0, 0);
+  Future _setupNewNotification(DateTime birthdayListKey) async {
+    if (birthdayList.containsKey(birthdayListKey) &&
+        birthdayList[birthdayListKey]!.isNotEmpty) {
+      final birthdaysThisDay = birthdayList[birthdayListKey]!;
+      final hasMultipleBirthdays = birthdaysThisDay.length > 1;
 
-    await _notificationService.scheduleNotification(
-      id,
-      'Don\'t miss todays cakeday!',
-      '${birthday.personName} is celebrating today!',
-      notificationDate,
-    );
+      final year =
+          birthdaysThisDay.first.currentYearBirthdayDate.isAfter(DateTime.now())
+              ? DateTime.now().year
+              : DateTime.now().year + 1;
+      final notificationDate = DateTime(
+          year,
+          birthdaysThisDay.first.birthdayDate.month,
+          birthdaysThisDay.first.birthdayDate.day,
+          9,
+          0,
+          0);
+
+      var notificationId =
+          birthdaysThisDay.fold<int>(0, (sum, model) => sum + model.id!);
+      var notificationTitle =
+          'Don\'t miss todays ${hasMultipleBirthdays ? ('${birthdaysThisDay.length} cakedays') : 'cakeday'}!';
+      var notificationBody =
+          '${birthdaysThisDay.map((e) => e.personName).join(", ")} ${hasMultipleBirthdays ? 'are' : 'is'} celebrating today!';
+
+      await _notificationService.scheduleNotification(
+        notificationId,
+        notificationTitle,
+        notificationBody,
+        notificationDate,
+      );
+    }
+  }
+
+  Future _removeOldNotification(DateTime birthdayListKey) async {
+    if (birthdayList.containsKey(birthdayListKey) &&
+        birthdayList[birthdayListKey]!.isNotEmpty) {
+      final birthdaysThisDay = birthdayList[birthdayListKey]!;
+      var notificationId =
+          birthdaysThisDay.fold<int>(0, (sum, model) => sum + model.id!);
+
+      await _notificationService.cancelNotification(notificationId);
+    }
   }
 }

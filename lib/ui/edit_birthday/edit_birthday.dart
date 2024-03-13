@@ -17,7 +17,7 @@ class EditBirthdayPage extends StatefulWidget {
 
 class _EditBirthdayPageState extends State<EditBirthdayPage> {
   final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _noteController = TextEditingController();
   bool? _idkYear = true;
   String get _selectedDateDisplayString =>
       _idkYear! || widget.birthday.birthdayDate.year == 0
@@ -41,7 +41,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
   @override
   void initState() {
     _nameController.text = widget.birthday.personName;
-    _descriptionController.text = widget.birthday.note;
+    _noteController.text = widget.birthday.note;
     _idkYear = widget.birthday.birthdayDate.year == 0;
 
     super.initState();
@@ -142,7 +142,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
               style: const TextStyle(
                 color: AppColors.cornsilk,
               ),
-              controller: _descriptionController,
+              controller: _noteController,
               decoration: InputDecoration(
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -238,6 +238,8 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
 
   Future _updateBirthday() async {
     if (_nameController.text.isNotEmpty) {
+      widget.birthday.personName = _nameController.text;
+      widget.birthday.note = _noteController.text;
       await context.read<BirthdayProvider>().updateBirthday(widget.birthday);
 
       if (context.mounted) {
