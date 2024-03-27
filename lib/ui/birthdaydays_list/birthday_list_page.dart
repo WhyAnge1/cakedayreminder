@@ -2,7 +2,7 @@ import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
 import 'package:cakeday_reminder/extensions/datetime_extensions.dart';
 import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_cell.dart';
-import 'package:cakeday_reminder/ui/edit_birthday/edit_birthday.dart';
+import 'package:cakeday_reminder/ui/edit_birthday/edit_birthday_page.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';

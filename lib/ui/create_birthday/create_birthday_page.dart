@@ -1,5 +1,6 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
+import 'package:cakeday_reminder/business_logic/import/import_provider.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -187,7 +188,7 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
 
     if (filePath != null) {
       final result = await context
-          .read<BirthdayProvider>()
+          .read<ImportProvider>()
           .importBirthdaysFromFile(filePath);
 
       if (context.mounted) {

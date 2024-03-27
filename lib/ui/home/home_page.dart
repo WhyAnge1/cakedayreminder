@@ -1,5 +1,6 @@
-import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_list.dart';
-import 'package:cakeday_reminder/ui/create_birthday/create_birthday.dart';
+import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_list_page.dart';
+import 'package:cakeday_reminder/ui/create_birthday/create_birthday_page.dart';
+import 'package:cakeday_reminder/ui/profile/profile_page.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
@@ -42,9 +43,7 @@ class _HomePageState extends State<HomePage>
             Container(
               child: Center(child: Text("group".tr)),
             ),
-            Container(
-              child: Center(child: Text("profile".tr)),
-            ),
+            const ProfilePage()
           ],
         ),
       ),

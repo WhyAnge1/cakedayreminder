@@ -168,6 +168,18 @@ class _$BirthdayDao extends BirthdayDao {
   }
 
   @override
+  Future<List<BirthdayModel>> getByBirthdayDate(DateTime date) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM BirthdayModel WHERE birthdayDate = ?1',
+        mapper: (Map<String, Object?> row) => BirthdayModel(
+            id: row['id'] as int?,
+            personName: row['personName'] as String,
+            birthdayDate: _dateTimeConverter.decode(row['birthdayDate'] as int),
+            note: row['note'] as String),
+        arguments: [_dateTimeConverter.encode(date)]);
+  }
+
+  @override
   Future<int> insertModel(BirthdayModel model) {
     return _birthdayModelInsertionAdapter.insertAndReturnId(
         model, OnConflictStrategy.abort);
