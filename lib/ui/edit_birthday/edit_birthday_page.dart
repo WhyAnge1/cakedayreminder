@@ -163,6 +163,13 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
             const SizedBox(height: 15.0),
             FloatingActionButton.extended(
               backgroundColor: AppColors.lion,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: const BorderSide(
+                  color: AppColors.cornsilk,
+                  width: 1,
+                ),
+              ),
               label: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 5,

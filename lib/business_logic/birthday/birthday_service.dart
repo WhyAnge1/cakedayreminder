@@ -30,11 +30,10 @@ class BirthdayService {
     await database.birthdayDao.insertItems(birthdays);
     await database.close();
 
-    var newGroupedBirthdays = groupBy(
-        birthdays, (BirthdayModel model) => model.currentYearBirthdayDate);
-    for (final date in newGroupedBirthdays.keys) {
-      await setupNewNotificationForBirthdayByDate(
-          date, newGroupedBirthdays[date]!);
+    for (final date in birthdays.map((e) => e.currentYearBirthdayDate)) {
+      final thisDateBirthdays = await _getAllBirthdaysByDate(date);
+
+      await setupNewNotificationForBirthdayByDate(date, thisDateBirthdays);
     }
   }
 

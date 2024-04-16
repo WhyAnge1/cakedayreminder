@@ -1,5 +1,7 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_service.dart';
+import 'package:cakeday_reminder/business_logic/export/export_provider.dart';
+import 'package:cakeday_reminder/business_logic/export/export_service.dart';
 import 'package:cakeday_reminder/business_logic/import/import_provider.dart';
 import 'package:cakeday_reminder/business_logic/import/import_service.dart';
 import 'package:cakeday_reminder/business_logic/notifications/notification_provider.dart';
@@ -30,6 +32,7 @@ void main() {
 
 void registerDependencies() {
   getIt.registerSingleton(ImportService());
+  getIt.registerSingleton(ExportService());
   getIt.registerSingleton(NotificationService());
   getIt.registerSingleton(BirthdayService());
 }
@@ -80,6 +83,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BirthdayProvider()),
         ChangeNotifierProvider(create: (context) => NotificationProvider()),
         ChangeNotifierProvider(create: (context) => ImportProvider()),
+        ChangeNotifierProvider(create: (context) => ExportProvider()),
       ],
       child: GetMaterialApp(
         translations: Messages(),

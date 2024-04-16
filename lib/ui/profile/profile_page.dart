@@ -1,6 +1,9 @@
+import 'package:cakeday_reminder/business_logic/export/export_provider.dart';
+import 'package:cakeday_reminder/business_logic/import/import_provider.dart';
 import 'package:cakeday_reminder/business_logic/notifications/notification_provider.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -39,9 +42,9 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         backgroundColor: AppColors.lion,
         foregroundColor: AppColors.cornsilk,
-        title: Text(
+        title: const Text(
           'Profile',
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.cornsilk,
           ),
         ),
@@ -82,6 +85,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 10.0),
                       FloatingActionButton.extended(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: const BorderSide(
+                            color: AppColors.cornsilk,
+                            width: 1,
+                          ),
+                        ),
                         backgroundColor: AppColors.lion,
                         label: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -96,6 +106,52 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         onPressed: _reloadNotifications,
+                      ),
+                      const SizedBox(height: 10.0),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _exportBirthdays,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.lion,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(
+                                  color: AppColors.cornsilk,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              'Export birthdays',
+                              style: TextStyle(
+                                color: AppColors.cornsilk,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20.0),
+                          ElevatedButton(
+                            onPressed: _importBirthdays,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.lion,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(
+                                  color: AppColors.cornsilk,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              'Import birthdays',
+                              style: TextStyle(
+                                color: AppColors.cornsilk,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -116,5 +172,34 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future _reloadNotifications() async {
     await context.read<NotificationProvider>().reloadNotifications();
+  }
+
+  Future _importBirthdays() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx', 'xls'],
+    );
+
+    final filePath = result?.files.single.path;
+
+    if (filePath != null) {
+      final result = await context
+          .read<ImportProvider>()
+          .importBirthdaysFromFile(filePath);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result
+                ? 'cakedays_imported_successfully'.tr
+                : 'failed_to_import_cakedays'.tr),
+          ),
+        );
+      }
+    }
+  }
+
+  Future _exportBirthdays() async {
+    await context.read<ExportProvider>().exportBirthdaysAsXml();
   }
 }

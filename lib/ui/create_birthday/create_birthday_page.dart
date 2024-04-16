@@ -1,11 +1,9 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
-import 'package:cakeday_reminder/business_logic/import/import_provider.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreateBirthdayPage extends StatefulWidget {
@@ -53,15 +51,6 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
             color: AppColors.cornsilk,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: _uploadFile,
-            icon: const Icon(
-              Icons.upload_file,
-              color: AppColors.cornsilk,
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -158,6 +147,13 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
             const SizedBox(height: 15.0),
             FloatingActionButton.extended(
               backgroundColor: AppColors.lion,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: const BorderSide(
+                  color: AppColors.cornsilk,
+                  width: 1,
+                ),
+              ),
               label: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 5,
@@ -176,31 +172,6 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _uploadFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-    );
-
-    final filePath = result?.files.single.path;
-
-    if (filePath != null) {
-      final result = await context
-          .read<ImportProvider>()
-          .importBirthdaysFromFile(filePath);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result
-                ? 'cakedays_imported_successfully'.tr
-                : 'failed_to_import_cakedays'.tr),
-          ),
-        );
-      }
-    }
   }
 
   Future _saveBirthday() async {
