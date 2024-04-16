@@ -9,9 +9,6 @@ abstract class BirthdayDao {
   @Query('SELECT * FROM BirthdayModel WHERE id = :id')
   Future<List<BirthdayModel>> getById(int id);
 
-  @Query('SELECT * FROM BirthdayModel WHERE birthdayDate = :date')
-  Future<List<BirthdayModel>> getByBirthdayDate(DateTime date);
-
   @insert
   Future<int> insertModel(BirthdayModel model);
 

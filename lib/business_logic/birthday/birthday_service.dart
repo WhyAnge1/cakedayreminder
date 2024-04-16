@@ -2,6 +2,7 @@ import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/constants/app_constants.dart';
 import 'package:cakeday_reminder/business_logic/database/database.dart';
 import 'package:cakeday_reminder/business_logic/notifications/notification_service.dart';
+import 'package:cakeday_reminder/extensions/datetime_extensions.dart';
 import 'package:cakeday_reminder/main.dart';
 import 'package:collection/collection.dart';
 
@@ -15,8 +16,11 @@ class BirthdayService {
     await database.birthdayDao.insertModel(birthday);
     await database.close();
 
+    var thisDateBirthdays =
+        await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
+
     await setupNewNotificationForBirthdayByDate(
-        birthday.currentYearBirthdayDate);
+        birthday.currentYearBirthdayDate, thisDateBirthdays);
   }
 
   Future addBirthdays(List<BirthdayModel> birthdays) async {
@@ -29,7 +33,8 @@ class BirthdayService {
     var newGroupedBirthdays = groupBy(
         birthdays, (BirthdayModel model) => model.currentYearBirthdayDate);
     for (final date in newGroupedBirthdays.keys) {
-      await setupNewNotificationForBirthdayByDate(date);
+      await setupNewNotificationForBirthdayByDate(
+          date, newGroupedBirthdays[date]!);
     }
   }
 
@@ -40,8 +45,11 @@ class BirthdayService {
     await database.birthdayDao.deleteModel(birthday);
     await database.close();
 
+    var thisDateBirthdays =
+        await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
+
     await setupNewNotificationForBirthdayByDate(
-        birthday.currentYearBirthdayDate);
+        birthday.currentYearBirthdayDate, thisDateBirthdays);
   }
 
   Future updateBirthday(BirthdayModel birthday) async {
@@ -51,8 +59,11 @@ class BirthdayService {
     await database.birthdayDao.updateModel(birthday);
     await database.close();
 
+    var thisDateBirthdays =
+        await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
+
     await setupNewNotificationForBirthdayByDate(
-        birthday.currentYearBirthdayDate);
+        birthday.currentYearBirthdayDate, thisDateBirthdays);
   }
 
   Future<Map<DateTime, List<BirthdayModel>>> getGroupedBirthdays() async {
@@ -69,8 +80,8 @@ class BirthdayService {
       });
 
       final firstBirthday = allBirthdays.firstWhere((e) =>
-          e.birthdayDate.month >= DateTime.now().month &&
-          e.birthdayDate.day >= DateTime.now().day);
+          e.currentYearBirthdayDate.isToday() ||
+          e.currentYearBirthdayDate.isAfter(DateTime.now()));
       final birthdaysAfterToday = allBirthdays.sublist(
           allBirthdays.indexOf(firstBirthday), allBirthdays.length);
       final birthdaysBeforeToday =
@@ -98,15 +109,16 @@ class BirthdayService {
     final database = await $FloorAppDatabase
         .databaseBuilder(AppConstants.dataBaseName)
         .build();
-    final allBirthdays = await database.birthdayDao.getByBirthdayDate(date);
+    final allBirthdays = await database.birthdayDao.getAll();
     await database.close();
 
-    return allBirthdays;
+    return allBirthdays
+        .where((e) => e.currentYearBirthdayDate == date)
+        .toList();
   }
 
-  Future setupNewNotificationForBirthdayByDate(DateTime birthdayDate) async {
-    var birthdaysThisDay = await _getAllBirthdaysByDate(birthdayDate);
-
+  Future setupNewNotificationForBirthdayByDate(
+      DateTime birthdayDate, List<BirthdayModel> birthdaysThisDay) async {
     await _removeOldNotifications(birthdaysThisDay);
 
     if (birthdaysThisDay.isNotEmpty) {
@@ -124,11 +136,11 @@ class BirthdayService {
           0,
           0);
 
-      var notificationId =
+      final notificationId =
           birthdaysThisDay.fold<int>(0, (sum, model) => sum + model.id!);
-      var notificationTitle =
+      final notificationTitle =
           'Don\'t miss todays ${hasMultipleBirthdays ? ('${birthdaysThisDay.length} cakedays') : 'cakeday'}!';
-      var notificationBody =
+      final notificationBody =
           '${birthdaysThisDay.map((e) => e.personName).join(", ")} ${hasMultipleBirthdays ? 'are' : 'is'} celebrating today!';
 
       await _notificationService.scheduleMultipleNotifications(

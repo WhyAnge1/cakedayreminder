@@ -12,20 +12,18 @@ class NotificationService {
 
   Future scheduleMultipleNotifications(
       int id, String title, String body, DateTime date, int count) async {
-    for (var i = 0; i < count; i++) {
-      await _scheduleNotification(
-          id + i,
-          title,
-          body,
-          DateTime(date.year + i, date.month, date.day, date.hour, date.minute,
-              date.second));
-    }
+    await Future.wait(List.generate(
+        count,
+        (i) => _scheduleNotification(
+            id + i,
+            title,
+            body,
+            DateTime(date.year + i, date.month, date.day, date.hour,
+                date.minute, date.second))));
   }
 
   Future cancelMultipleNotifications(int id, int count) async {
-    for (var i = 0; i < count; i++) {
-      await _cancelNotification(id + i);
-    }
+    await Future.wait(List.generate(count, (i) => _cancelNotification(id + i)));
   }
 
   Future _scheduleNotification(
