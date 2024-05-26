@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:cakeday_reminder/abstractions/base_usecase.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:excel/excel.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ExportService {
+@injectable
+class ExportUseCase extends BaseUseCase {
   Future<bool> exportBirthdaysToXml(List<BirthdayModel> birthdays) async {
     try {
       final file = await _prepareXMLFile(birthdays);

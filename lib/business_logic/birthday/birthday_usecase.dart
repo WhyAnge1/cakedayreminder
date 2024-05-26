@@ -1,34 +1,39 @@
+import 'package:cakeday_reminder/abstractions/base_usecase.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:cakeday_reminder/business_logic/constants/app_constants.dart';
-import 'package:cakeday_reminder/business_logic/database/database.dart';
-import 'package:cakeday_reminder/business_logic/notifications/notification_service.dart';
+import 'package:cakeday_reminder/business_logic/constants/firebase_events_names.dart';
+import 'package:cakeday_reminder/business_logic/notifications/notifications_usecase.dart';
 import 'package:cakeday_reminder/extensions/datetime_extensions.dart';
-import 'package:cakeday_reminder/main.dart';
 import 'package:collection/collection.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 
-class BirthdayService {
-  final _notificationService = getIt.get<NotificationService>();
+@injectable
+class BirthdayUseCase extends BaseUseCase {
+  final NotificationsUseCase _notificationService;
+
+  BirthdayUseCase(this._notificationService);
 
   Future addBirthday(BirthdayModel birthday) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     await database.birthdayDao.insertModel(birthday);
-    await database.close();
 
     var thisDateBirthdays =
         await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
 
     await setupNewNotificationForBirthdayByDate(
         birthday.currentYearBirthdayDate, thisDateBirthdays);
+
+    FirebaseAnalytics.instance.logEvent(
+      name: FirebaseEventsNames.birthdayCreated,
+      parameters: {
+        "date": DateFormat('dd/MM/yyyy').format(birthday.birthdayDate)
+      },
+    );
   }
 
   Future addBirthdays(List<BirthdayModel> birthdays) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     await database.birthdayDao.insertItems(birthdays);
-    await database.close();
 
     for (final date in birthdays.map((e) => e.currentYearBirthdayDate)) {
       final thisDateBirthdays = await _getAllBirthdaysByDate(date);
@@ -38,11 +43,7 @@ class BirthdayService {
   }
 
   Future removeBirthday(BirthdayModel birthday) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     await database.birthdayDao.deleteModel(birthday);
-    await database.close();
 
     var thisDateBirthdays =
         await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
@@ -52,11 +53,7 @@ class BirthdayService {
   }
 
   Future updateBirthday(BirthdayModel birthday) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     await database.birthdayDao.updateModel(birthday);
-    await database.close();
 
     var thisDateBirthdays =
         await _getAllBirthdaysByDate(birthday.currentYearBirthdayDate);
@@ -95,21 +92,13 @@ class BirthdayService {
   }
 
   Future<List<BirthdayModel>> getAllBirthdays() async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     final allBirthdays = await database.birthdayDao.getAll();
-    await database.close();
 
     return allBirthdays;
   }
 
   Future<List<BirthdayModel>> _getAllBirthdaysByDate(DateTime date) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(AppConstants.dataBaseName)
-        .build();
     final allBirthdays = await database.birthdayDao.getAll();
-    await database.close();
 
     return allBirthdays
         .where((e) => e.currentYearBirthdayDate == date)

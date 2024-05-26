@@ -1,10 +1,10 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
-import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
+import 'package:cakeday_reminder/configure_dependencies.dart';
+import 'package:cakeday_reminder/ui/edit_birthday/edit_birthday_cubit.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class EditBirthdayPage extends StatefulWidget {
   final BirthdayModel birthday;
@@ -16,6 +16,8 @@ class EditBirthdayPage extends StatefulWidget {
 }
 
 class _EditBirthdayPageState extends State<EditBirthdayPage> {
+  final EditBirthdayCubit _cubit = getIt<EditBirthdayCubit>();
+
   final _nameController = TextEditingController();
   final _noteController = TextEditingController();
   bool? _idkYear = true;
@@ -23,20 +25,6 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
       _idkYear! || widget.birthday.birthdayDate.year == 0
           ? DateFormat('dd MMMM').format(widget.birthday.birthdayDate)
           : DateFormat('dd MMMM y').format(widget.birthday.birthdayDate);
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: widget.birthday.birthdayDate,
-      firstDate: DateTime(0),
-      lastDate: DateTime(DateTime.now().year + 1),
-    );
-    if (picked != null && picked != widget.birthday.birthdayDate) {
-      widget.birthday.birthdayDate =
-          DateTime(_idkYear! ? 0 : picked.year, picked.month, picked.day);
-      setState(() {});
-    }
-  }
 
   @override
   void initState() {
@@ -190,7 +178,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
     );
   }
 
-  _showDeleteConfirmation(BuildContext context) {
+  void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -239,7 +227,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
   }
 
   Future _deleteBirthday() async {
-    await context.read<BirthdayProvider>().removeBirthday(widget.birthday);
+    await _cubit.removeBirthday(widget.birthday);
     Navigator.pop(context);
   }
 
@@ -247,7 +235,7 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
     if (_nameController.text.isNotEmpty) {
       widget.birthday.personName = _nameController.text;
       widget.birthday.note = _noteController.text;
-      await context.read<BirthdayProvider>().updateBirthday(widget.birthday);
+      await _cubit.updateBirthday(widget.birthday);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -258,6 +246,20 @@ class _EditBirthdayPageState extends State<EditBirthdayPage> {
 
         Navigator.of(context).pop();
       }
+    }
+  }
+
+  Future _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: widget.birthday.birthdayDate,
+      firstDate: DateTime(0),
+      lastDate: DateTime(DateTime.now().year + 1),
+    );
+    if (picked != null && picked != widget.birthday.birthdayDate) {
+      widget.birthday.birthdayDate =
+          DateTime(_idkYear! ? 0 : picked.year, picked.month, picked.day);
+      setState(() {});
     }
   }
 }

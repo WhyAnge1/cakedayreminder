@@ -1,8 +1,11 @@
+import 'package:cakeday_reminder/abstractions/base_usecase.dart';
 import 'package:cakeday_reminder/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:injectable/injectable.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class NotificationService {
+@injectable
+class NotificationsUseCase extends BaseUseCase {
   static const String channelId = 'birthday_channel';
   static const String channelName = 'Birthday notifications';
 

@@ -1,10 +1,11 @@
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
-import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
+import 'package:cakeday_reminder/configure_dependencies.dart';
+import 'package:cakeday_reminder/ui/create_birthday/create_birthday_cubit.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
 
 class CreateBirthdayPage extends StatefulWidget {
   const CreateBirthdayPage({super.key});
@@ -14,28 +15,15 @@ class CreateBirthdayPage extends StatefulWidget {
 }
 
 class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
+  final CreateBirthdayCubit _cubit = getIt<CreateBirthdayCubit>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+
   DateTime _selectedDate = DateTime.now();
   bool? _idkYear = true;
   String get _selectedDateDisplayString => _idkYear!
       ? DateFormat('dd MMMM').format(_selectedDate)
       : DateFormat('dd MMMM y').format(_selectedDate);
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(0),
-      lastDate: DateTime(DateTime.now().year + 1),
-    );
-
-    if (picked != null && picked != _selectedDate) {
-      _selectedDate =
-          DateTime(_idkYear! ? 0 : picked.year, picked.month, picked.day);
-      setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,20 +162,41 @@ class _CreateBirthdayPageState extends State<CreateBirthdayPage> {
     );
   }
 
+  Future _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(0),
+      lastDate: DateTime(DateTime.now().year + 1),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      _selectedDate =
+          DateTime(_idkYear! ? 0 : picked.year, picked.month, picked.day);
+      setState(() {});
+    }
+  }
+
   Future _saveBirthday() async {
     if (_nameController.text.isNotEmpty) {
-      await context.read<BirthdayProvider>().addBirthday(BirthdayModel(
-            personName: _nameController.text,
-            birthdayDate: DateTime(
-                _selectedDate.year, _selectedDate.month, _selectedDate.day),
-            note: _descriptionController.text,
-          ));
+      await _cubit.createBirthday(BirthdayModel(
+        personName: _nameController.text,
+        birthdayDate: DateTime(
+            _selectedDate.year, _selectedDate.month, _selectedDate.day),
+        note: _descriptionController.text,
+      ));
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('new_cakeday_saved_successfully'.tr),
-          ),
+        toastification.show(
+          context: context,
+          title: Text('new_cakeday_saved_successfully'.tr,
+              style: const TextStyle(
+                color: Colors.white,
+              )),
+          autoCloseDuration: const Duration(seconds: 5),
+          style: ToastificationStyle.fillColored,
+          type: ToastificationType.success,
+          alignment: Alignment.topCenter,
         );
 
         Navigator.of(context).pop();

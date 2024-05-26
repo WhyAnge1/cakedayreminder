@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "569793758862",
+    "firebase_url": "https://cakedayreminder-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "cakedayreminder",
+    "storage_bucket": "cakedayreminder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569793758862:android:95db894971a011cfc4ebdf",
+        "android_client_info": {
+          "package_name": "com.oleksandrkavun.cakedayreminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "569793758862-7raogje1v66366ci3b33t4o0bkc3aul0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK3in2zsSo0P2aP8foPlByOStmSNry6ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "569793758862-7raogje1v66366ci3b33t4o0bkc3aul0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

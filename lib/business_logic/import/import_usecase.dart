@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cakeday_reminder/abstractions/base_usecase.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
 import 'package:excel/excel.dart';
+import 'package:injectable/injectable.dart';
 
-class ImportService {
+@injectable
+class ImportUseCase extends BaseUseCase {
   Future<List<BirthdayModel>> importBirthdaysFromExel(File exelFile) async {
     List<BirthdayModel> importedBirthdays = [];
 

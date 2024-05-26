@@ -1,14 +1,16 @@
+import 'package:cakeday_reminder/abstractions/cubit/base_state.dart';
 import 'package:cakeday_reminder/business_logic/birthday/birthday_model.dart';
-import 'package:cakeday_reminder/business_logic/birthday/birthday_provider.dart';
+import 'package:cakeday_reminder/configure_dependencies.dart';
 import 'package:cakeday_reminder/extensions/datetime_extensions.dart';
 import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_cell.dart';
+import 'package:cakeday_reminder/ui/birthdaydays_list/birthday_list_cubit.dart';
 import 'package:cakeday_reminder/ui/edit_birthday/edit_birthday_page.dart';
 import 'package:cakeday_reminder/ui/resources/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class BirthdayListPage extends StatefulWidget {
   const BirthdayListPage({super.key});
@@ -18,11 +20,13 @@ class BirthdayListPage extends StatefulWidget {
 }
 
 class _BirthdayListPageState extends State<BirthdayListPage> {
+  final BirthdayListCubit _cubit = getIt<BirthdayListCubit>();
+
   @override
   void initState() {
-    context.read<BirthdayProvider>().refreshBirthdays();
-
     super.initState();
+
+    _cubit.getData();
   }
 
   @override
@@ -42,46 +46,52 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-        child: Consumer<BirthdayProvider>(
-          builder: (context, provider, child) => RefreshIndicator(
-            onRefresh: () async => await provider.refreshBirthdays(),
-            child: Column(
-              children: [
-                const SizedBox(height: 15),
-                provider.birthdayList.isEmpty
-                    ? Expanded(
-                        child: Center(
-                          child: Text(
-                            'no_birthdays_yet'.tr,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: AppColors.cornsilk,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.separated(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 15),
-                          itemCount: provider.birthdayList.length,
-                          itemBuilder: (context, index) {
-                            final modelKey =
-                                provider.birthdayList.keys.elementAt(index);
-
-                            return _constructBirthdayGroupedCell(
-                                modelKey, provider.birthdayList[modelKey]!);
-                          },
-                        ),
-                      ),
-              ],
-            ),
+        child: BlocBuilder<BirthdayListCubit, BaseState>(
+          bloc: _cubit,
+          builder: (context, state) => RefreshIndicator(
+            onRefresh: _getAllBirthdays,
+            child:
+                state is SuccessDataState<Map<DateTime, List<BirthdayModel>>> &&
+                        state.data.isNotEmpty
+                    ? _buildDataState(state)
+                    : _buildEmptyState(),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildEmptyState() => CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            child: Center(
+              child: Text(
+                'no_birthdays_yet'.tr,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: AppColors.cornsilk,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildDataState(
+          SuccessDataState<Map<DateTime, List<BirthdayModel>>> state) =>
+      Expanded(
+        child: ListView.separated(
+          padding: const EdgeInsets.only(bottom: 15),
+          separatorBuilder: (context, index) => const SizedBox(height: 15),
+          itemCount: state.data.length,
+          itemBuilder: (context, index) {
+            final modelKey = state.data.keys.elementAt(index);
+
+            return _constructBirthdayGroupedCell(
+                modelKey, state.data[modelKey]!);
+          },
+        ),
+      );
 
   Widget _constructBirthdayGroupedCell(
       DateTime date, List<BirthdayModel> dateBirthdays) {
@@ -163,4 +173,6 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
       ),
     );
   }
+
+  Future _getAllBirthdays() => _cubit.getData();
 }
