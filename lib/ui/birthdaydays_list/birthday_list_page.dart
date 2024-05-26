@@ -79,18 +79,15 @@ class _BirthdayListPageState extends State<BirthdayListPage> {
 
   Widget _buildDataState(
           SuccessDataState<Map<DateTime, List<BirthdayModel>>> state) =>
-      Expanded(
-        child: ListView.separated(
-          padding: const EdgeInsets.only(bottom: 15),
-          separatorBuilder: (context, index) => const SizedBox(height: 15),
-          itemCount: state.data.length,
-          itemBuilder: (context, index) {
-            final modelKey = state.data.keys.elementAt(index);
+      ListView.separated(
+        padding: const EdgeInsets.only(bottom: 15),
+        separatorBuilder: (context, index) => const SizedBox(height: 15),
+        itemCount: state.data.length,
+        itemBuilder: (context, index) {
+          final modelKey = state.data.keys.elementAt(index);
 
-            return _constructBirthdayGroupedCell(
-                modelKey, state.data[modelKey]!);
-          },
-        ),
+          return _constructBirthdayGroupedCell(modelKey, state.data[modelKey]!);
+        },
       );
 
   Widget _constructBirthdayGroupedCell(

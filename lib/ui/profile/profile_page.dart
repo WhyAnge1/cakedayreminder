@@ -74,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
             )),
         autoCloseDuration: const Duration(seconds: 5),
         style: ToastificationStyle.fillColored,
-        type: ToastificationType.success,
+        type: ToastificationType.error,
         alignment: Alignment.topCenter,
       );
     } else if (state is SuccessDataState<String>) {
@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
             )),
         autoCloseDuration: const Duration(seconds: 5),
         style: ToastificationStyle.fillColored,
-        type: ToastificationType.error,
+        type: ToastificationType.success,
         alignment: Alignment.topCenter,
       );
     }
